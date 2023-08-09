@@ -44,10 +44,11 @@ const Nav = () => {
 
                         <Link href="/profile">
                             <Image
-                                src="/images/logo.svg"
+                                src={session.user.image}
                                 alt="Profile"
                                 width="37"
                                 height="37"
+                                className="rounded-full object-contain"
                             />
                         </Link>
                     </div>
