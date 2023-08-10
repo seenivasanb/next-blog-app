@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 
 const Nav = () => {
     const { data: session } = useSession();
-
     const [providers, setProviders] = useState(null);
 
     useEffect(() => {
@@ -16,8 +15,7 @@ const Nav = () => {
             setProviders(response);
         }
         handleProviders();
-    }, [])
-
+    }, []);
 
     return (
         <nav className="flex-between w-full mb-16 pt-3">
@@ -42,7 +40,7 @@ const Nav = () => {
                             Sign Out
                         </button>
 
-                        <Link href="/profile">
+                        <Link href={`/profile/${session.user.id}`}>
                             <Image
                                 src={session.user.image}
                                 alt="Profile"

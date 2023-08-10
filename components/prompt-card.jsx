@@ -1,45 +1,39 @@
-import { useSession } from 'next-auth/react';
 import Image from 'next/image'
-import { usePathname, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import React, { useState } from 'react'
 
-const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
-
-    const { data: session } = useSession();
-    const pathName = usePathname();
-    const router = useRouter();
-
+const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete, isOwner }) => {
     const [copied, setCopied] = useState("");
 
     const handleCopy = () => {
         setCopied(post.prompt);
         navigator.clipboard.writeText(post.prompt);
-        setTimeout(() => {
-            setCopied("");
-        }, 3000)
+        setTimeout(() => { setCopied("") }, 3000);
     }
 
     return (
         <div className="prompt_card">
             <div className="flex justify-between items-start gap-5">
-                <div className="flex-1 flex justify-start items-center gap-3 cursor-pointer">
-                    <Image
-                        src={post.creator.image}
-                        alt="user image"
-                        height={40}
-                        width={40}
-                        className="rounded-full object-contain"
-                    />
-
-                    <div className="flex flex-col">
-                        <h3 className="font-santoshi font-semibold text-gray-900">
-                            {post.creator.username}
-                        </h3>
-                        <p className="font-inter text-sm text-gray-500">
-                            {post.creator.email}
-                        </p>
-                    </div>
-
+                <div className="flex-1 flex justify-between items-center gap-3 cursor-pointer">
+                    <Link
+                        href={`/profile/${post.creator._id}?name=${post.creator.username}`}
+                        className="flex gap-3">
+                        <Image
+                            src={post.creator.image}
+                            alt="user image"
+                            height={44}
+                            width={44}
+                            className="rounded-full object-contain"
+                        />
+                        <div className="flex flex-col justify-center">
+                            <h3 className="font-santoshi font-semibold text-gray-900">
+                                {post.creator.username}
+                            </h3>
+                            <p className="font-inter text-sm text-gray-500">
+                                {post.creator.email}
+                            </p>
+                        </div>
+                    </Link>
                     <div
                         className="copy_btn"
                         onClick={handleCopy}>
@@ -64,7 +58,7 @@ const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
                 #{post.tag}
             </p>
 
-            {session?.user.id === post.creator._id && pathName === "/profile" && (
+            {isOwner && (
                 <div className='mt-5 flex-center gap-4 border-t border-gray-200 pt-3'>
                     <p className="font-inter green_gradient text-sm cursor-pointer"
                         onClick={handleEdit}>

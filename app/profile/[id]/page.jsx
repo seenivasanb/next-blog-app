@@ -2,30 +2,34 @@
 
 import Profile from "@components/profile";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const MyProfile = () => {
 
     const router = useRouter();
-
+    const params = useParams()
     const { data: session } = useSession();
+    const userId = params?.id;
+    const searchParams = useSearchParams();
+    const isOwner = (userId === session?.user.id) ? true : false;
+    const userName = isOwner ? "My" : searchParams.get("name");
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await fetch(`/api/users/${session.user.id}/posts`);
+                const response = await fetch(`/api/users/${userId}/posts`);
                 const data = await response.json();
 
-                setPosts(data)
+                setPosts(data);
             } catch (error) {
                 setPosts([]);
             }
         }
-        if (session?.user.id) fetchPosts();
+        if (userId) fetchPosts();
 
-    }, [session?.user.id])
+    }, [userId])
 
 
     const handleEdit = (post) => {
@@ -37,7 +41,7 @@ const MyProfile = () => {
 
         if (hasConfirmed) {
             try {
-                const response = await fetch(`/api/prompt/${post._id}`, {
+                await fetch(`/api/prompt/${post._id}`, {
                     method: "DELETE"
                 });
 
@@ -51,13 +55,14 @@ const MyProfile = () => {
 
     return (
         <Profile
-            name="My"
+            name={userName}
             data={posts}
-            desc="Welcome to the profile page"
+            desc={`Welcome to ${userName}'s personalized profile page. Explore ${userName}'s exceptional prompts and be inspired by the power of their imagination`}
             handleEdit={handleEdit}
             handleDelete={handleDelete}
+            isOwner={isOwner}
         />
     )
 }
 
-export default MyProfile
+export default MyProfile;
