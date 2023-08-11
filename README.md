@@ -3,7 +3,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Deployed
 
-Deployed on Vercel: https://next-blog-app-dbdm-l28438nfz-seenivasanb.vercel.app/ 
+Deployed on Vercel: https://next-blog-app-dbdm.vercel.app/
 
 ## Getting Started
 
